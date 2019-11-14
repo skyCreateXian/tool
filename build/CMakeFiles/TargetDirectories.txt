@@ -1,0 +1,3 @@
+/home/huanglei/tool/build/CMakeFiles/rebuild_cache.dir
+/home/huanglei/tool/build/CMakeFiles/tool.dir
+/home/huanglei/tool/build/CMakeFiles/edit_cache.dir

@@ -1,0 +1,20 @@
+{
+    "files.associations": {
+        "random": "cpp",
+        "sstream": "cpp",
+        "string": "cpp",
+        "array": "cpp",
+        "deque": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp",
+        "initializer_list": "cpp",
+        "*.ipp": "cpp",
+        "bitset": "cpp",
+        "ratio": "cpp",
+        "functional": "cpp",
+        "complex": "cpp",
+        "fstream": "cpp",
+        "cstdlib": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
+}
