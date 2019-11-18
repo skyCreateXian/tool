@@ -301,7 +301,12 @@ int main(int argc, char* argv[]){
 	}
 
 	int partNum = 2;
-	int shmidArray[partNum];
+	int shmidArray[partNum*partNum];
+	for (int i = 0; i < partNum*partNum; i++)
+	{
+		shmidArray[i] = createShareMemory(i);
+		printf("%d \n",shmidArray[i]);
+	}
 	//read video test
 	VideoCapture cap;
 	cap.open(0);//auto detect camera ID
@@ -322,41 +327,38 @@ int main(int argc, char* argv[]){
 		cap >> frame;
 		haarModel = cascade3;
 		CutImageParts parts = cutImageParts(0,100,frame.cols,frame.rows,partNum);
-		for (int i = 0; i < partNum*partNum; i++)
-		{
-			shmidArray[i] = createShareMemory(i);
-		}
-		
 		IplImage iplTemp = (IplImage)frame;
 		IplImage* iplframe = &iplTemp;
 		firstStep(parts,iplframe,haarModel,shmidArray);
 
 		//fuse aim
+		IplImage* cloneImageByCut = cvCloneImage(iplframe);
 		for (int i = 0; i < partNum*partNum; i++)
 		{
-			IplImage* partImage = getSampleImage(iplframe,parts.GdiArray[i]);
-			int widthOffset = parts.GdiArray[i].left;
-			int heightOffset = parts.GdiArray[i].top;
+			IplImage* partImage = getSampleImage(cloneImageByCut,parts.GdiArray[i]);
 			ShareMemory sha = shareMemoryRead(shmidArray[i]);
 			if(sha.num>0)
 			{
-				for (int i = 0; i < sha.num; i++)
+				int widthOffset = parts.GdiArray[i].left;
+				int heightOffset = parts.GdiArray[i].top;
+				for (int arrayNum = 0; arrayNum < sha.num; arrayNum++)
 				{
 					if(toolNum==2||toolNum==3||toolNum==6||toolNum==7)
 						cvRectangle(partImage,
-						cvPoint(sha.GdiArray[i].left,sha.GdiArray[i].top),
-						cvPoint(sha.GdiArray[i].right,sha.GdiArray[i].bottom),cvScalar(0,0,255),4,8,0);
+						cvPoint(sha.GdiArray[arrayNum].left,sha.GdiArray[arrayNum].top),
+						cvPoint(sha.GdiArray[arrayNum].right,sha.GdiArray[arrayNum].bottom),cvScalar(0,0,255),4,8,0);
 					if(toolNum==4||toolNum==5||toolNum==6||toolNum==7||toolNum==8)
 					{
-						sha.GdiArray[i] = {
-							sha.GdiArray[i].left+widthOffset,
-							sha.GdiArray[i].top+heightOffset,
-							sha.GdiArray[i].right+widthOffset,
-							sha.GdiArray[i].bottom+heightOffset
+						sha.GdiArray[arrayNum] = {
+							sha.GdiArray[arrayNum].left+widthOffset,
+							sha.GdiArray[arrayNum].top+heightOffset,
+							sha.GdiArray[arrayNum].right+widthOffset,
+							sha.GdiArray[arrayNum].bottom+heightOffset
 						};
+						if(i==3) printf("%d %d %d %d \n",sha.GdiArray[arrayNum].left,sha.GdiArray[arrayNum].top,sha.GdiArray[arrayNum].right,sha.GdiArray[arrayNum].bottom);
 						cvRectangle(iplframe,
-						cvPoint(sha.GdiArray[i].left,sha.GdiArray[i].top),
-						cvPoint(sha.GdiArray[i].right,sha.GdiArray[i].bottom),cvScalar(0,0,255),4,8,0);
+						cvPoint(sha.GdiArray[arrayNum].left,sha.GdiArray[arrayNum].top),
+						cvPoint(sha.GdiArray[arrayNum].right,sha.GdiArray[arrayNum].bottom),cvScalar(0,0,255),4,8,0);
 					}
 				}
 			}

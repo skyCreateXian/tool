@@ -14,7 +14,7 @@ Describe:
 
   Inspection process:
 
-  1. We try to cut the image equally. T * t uses multi process and shared memory mechanism for parallel detection.
+  1. We try to cut the image equally. T * T uses multi process and shared memory mechanism for parallel detection.
 
   2. The detection method uses Hal feature to extract image features.
 
