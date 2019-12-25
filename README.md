@@ -1,10 +1,10 @@
 Base:
-  Opencv 2.3 
+  Opencv 3.2 
   Ubuntu 16.04
   Caffe
   CMake
   
-LIB:
+include:
   pthread
   sys/shm.h
   sys/types.h
